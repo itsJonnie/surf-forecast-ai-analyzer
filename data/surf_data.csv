@@ -1,0 +1,16 @@
+date,location,wave_height_ft,wave_period_s,wind_speed_mph,wind_direction,tide_ft
+2025-08-07,Malibu,4.5,12,5,NE,3.2
+2025-08-08,Malibu,3.8,14,7,N,2.1
+2025-08-09,Malibu,5.2,10,9,NW,2.8
+2025-08-10,Malibu,6.0,11,4,E,3.5
+2025-08-11,Malibu,3.0,13,6,SE,1.9
+2025-08-07,Huntington Beach,5.0,10,12,SW,2.5
+2025-08-08,Huntington Beach,4.0,9,15,S,3.0
+2025-08-09,Huntington Beach,6.5,11,8,SE,2.2
+2025-08-10,Huntington Beach,7.0,12,10,S,2.9
+2025-08-11,Huntington Beach,3.5,8,14,SW,3.1
+2025-08-07,Santa Monica,3.2,9,6,NW,2.0
+2025-08-08,Santa Monica,4.5,8,9,W,2.3
+2025-08-09,Santa Monica,5.5,10,7,NE,3.0
+2025-08-10,Santa Monica,6.8,12,5,N,3.4
+2025-08-11,Santa Monica,4.0,9,8,NW,2.7
