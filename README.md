@@ -39,7 +39,7 @@ Usage
 2) Click “Get Forecast” to see:
    - A 0–100 quality score (single snapshot for live data; multi‑day if from CSV).
    - Headline, detail, hazards, board suggestion, and best session window.
-   - A chart with score and tooltip metrics (wave ft, period s, wind mph/dir).
+- A chart with score and tooltip metrics (wave ft, period s, wind mph/dir).
 
 For Surfers: How To Use It
 - Pick your spot and day: Choose one of the listed breaks and a date. Set your skill to get fairer scoring for your level.
@@ -56,6 +56,24 @@ For Surfers: How To Use It
   - Intermediate: 50–75 with waist‑to‑chest, manageable winds, mid+ period. Fish/shorter boards.
   - Advanced: 70+ with head‑high/longer period and offshore or light side. Shortboard.
 - If it’s marginal: Try protected corners, smaller tide windows, or dawn patrol to beat wind.
+
+Example Day Walkthrough
+- Scenario: Malibu on 2025‑08‑10 as an Intermediate surfer.
+  1) Open the app and pick:
+     - Location: Malibu
+     - Date: 2025‑08‑10
+     - Skill: Intermediate
+     - Screenshot: `assets/readme/01-home.png`
+  2) Click “Get Forecast” and review the badges and headline:
+     - Expect a mid‑to‑good score with mid‑period swell and light winds.
+     - You’ll see a board suggestion (likely fish/shortboard) and a dawn session window if wind picks up.
+     - Screenshot: `assets/readme/02-results.png`
+  3) Explore the chart:
+     - Hover to see tooltip metrics (wave ft, period s, wind mph/dir).
+     - If results are from CSV, labels span multiple days; live data shows a single bar snapshot.
+     - Screenshot: `assets/readme/03-chart-tooltip.png`
+
+Note: Image placeholders above won’t render until you add screenshots at those paths. Feel free to replace filenames or move them; just update the paths in this section.
 
 Supported Demo Locations
 - Malibu
