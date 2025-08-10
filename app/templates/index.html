@@ -6,35 +6,218 @@
     <title>Surf Forecast AI Analyzer</title>
     <!-- Tailwind CSS via CDN for quick styling -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js for interactive charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body class="bg-blue-50 min-h-screen flex items-center justify-center p-4">
-    <div class="bg-white rounded-xl shadow-lg p-6 max-w-3xl w-full">
-        <h1 class="text-2xl font-bold text-center mb-4">Surf Forecast AI Analyzer</h1>
-        <form method="get" action="/" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+<body class="bg-blue-50 min-h-screen">
+    <div class="max-w-3xl mx-auto p-4 md:p-6">
+        <div class="bg-white rounded-2xl shadow-lg p-6">
+        <h1 class="text-3xl font-extrabold text-center mb-2">Surf Forecast AI Analyzer 🏄‍♂️🌊</h1>
+        <p class="text-center text-slate-600 mb-6">Pick a spot, pick a day, see if it’s worth paddling out.</p>
+        <form method="get" action="/" class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
             <div>
                 <label for="location" class="block text-sm font-medium text-gray-700 mb-1">Location</label>
-                <input type="text" id="location" name="location" value="{{ location }}"
-                       class="w-full border border-gray-300 rounded-md p-2" placeholder="e.g. Malibu" required />
+                <select name="location" id="location" class="w-full rounded-xl border px-3 py-2" aria-label="Select surf spot">
+                  {% for spot in spots %}
+                    <option value="{{ spot }}" {% if location == spot %}selected{% endif %}>{{ spot }}</option>
+                  {% endfor %}
+                </select>
             </div>
             <div>
                 <label for="date" class="block text-sm font-medium text-gray-700 mb-1">Date (YYYY‑MM‑DD)</label>
-                <input type="date" id="date" name="date" value="{{ date }}"
-                       class="w-full border border-gray-300 rounded-md p-2" required />
+                <input type="date" id="date" name="date" value="{{ date }}" aria-label="Select forecast date"
+                       class="w-full border border-gray-300 rounded-xl px-3 py-2" required />
+            </div>
+            <div>
+                <label for="skill" class="block text-sm font-medium text-gray-700 mb-1">Skill</label>
+                <select name="skill" id="skill" class="w-full rounded-xl border px-3 py-2" aria-label="Select surfer skill">
+                    {% set skills = ["Beginner", "Intermediate", "Advanced"] %}
+                    {% for s in skills %}
+                      <option value="{{ s }}" {% if (skill or 'Beginner') == s %}selected{% endif %}>{{ s }}</option>
+                    {% endfor %}
+                </select>
             </div>
             <div class="flex items-end">
-                <button type="submit" class="w-full bg-blue-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-blue-700 transition duration-200">Get Forecast</button>
+                <button type="submit" class="w-full bg-blue-600 text-white font-semibold py-3 px-4 rounded-xl hover:bg-blue-700 transition duration-200" aria-label="Get forecast">Get Forecast</button>
             </div>
         </form>
         {% if error %}
         <p class="text-red-600 mb-4">{{ error }}</p>
         {% elif summary %}
+        {% if notice %}
+        <p class="text-amber-700 bg-amber-50 border border-amber-200 rounded p-3 mb-3 text-sm">
+            {{ notice }}
+        </p>
+        {% endif %}
         <div class="mb-4">
             <p class="text-gray-800 text-lg">{{ summary }}</p>
         </div>
-        <div class="mt-4">
-            <img src="/chart?location={{ location }}" alt="Surf quality chart" class="w-full rounded-md border" />
+        {% if headline %}
+        <div class="mb-4">
+            <p class="font-bold text-slate-800">🏄 {{ headline }}</p>
+            {% if detail %}
+            <p class="text-slate-700 mt-1 text-sm">{{ detail }}</p>
+            {% endif %}
+            {% if advice %}
+            <p class="text-slate-700 mt-1 text-sm"><span class="font-semibold">Tip:</span> {{ advice }}</p>
+            {% endif %}
+            <div class="flex flex-wrap gap-2 mt-3">
+                {% if board %}
+                  <span class="text-xs px-2 py-1 rounded-full bg-blue-100 text-blue-700">🏄‍♂️ {{ board }}</span>
+                {% endif %}
+                {% if session_window %}
+                  <span class="text-xs px-2 py-1 rounded-full bg-purple-100 text-purple-700">⏰ {{ session_window }}</span>
+                {% endif %}
+                {% if confidence %}
+                  {% if confidence|lower == 'high' %}
+                  <span class="text-xs px-2 py-1 rounded-full bg-emerald-100 text-emerald-700">✅ {{ confidence|capitalize }}</span>
+                  {% elif confidence|lower == 'medium' %}
+                  <span class="text-xs px-2 py-1 rounded-full bg-amber-100 text-amber-700">⚠️ {{ confidence|capitalize }}</span>
+                  {% else %}
+                  <span class="text-xs px-2 py-1 rounded-full bg-rose-100 text-rose-700">⚠️ {{ confidence|capitalize }}</span>
+                  {% endif %}
+                {% endif %}
+                {% if result and result.source == 'live' %}
+                  <span class="text-xs px-2 py-1 rounded-full bg-green-100 text-green-700">🛰️ Live</span>
+                {% elif result and result.source == 'csv' %}
+                  <span class="text-xs px-2 py-1 rounded-full bg-slate-100 text-slate-700">📄 CSV</span>
+                {% endif %}
+            </div>
+            {% if hazards and hazards|length > 0 %}
+            <ul class="list-disc list-inside text-xs text-rose-700 mt-2">
+              {% for hz in hazards %}
+                <li>⚠️ {{ hz }}</li>
+              {% endfor %}
+            </ul>
+            {% endif %}
         </div>
         {% endif %}
+        <div class="mt-6 rounded-2xl border border-slate-200 p-4 dark:border-slate-700">
+            <div class="flex items-center justify-between mb-2">
+                <h2 class="text-sm font-semibold text-slate-700 dark:text-slate-200">Surf Quality (0–100) 🌊</h2>
+                {% if result and result.source == 'live' %}
+                  <span class="text-xs px-2 py-1 rounded-full bg-green-100 text-green-700">🛰️ Live ✓ {{ result.as_of }}</span>
+                {% elif result and result.source == 'csv' %}
+                  <span class="text-xs px-2 py-1 rounded-full bg-slate-100 text-slate-600">📄 Fallback (CSV)</span>
+                {% endif %}
+            </div>
+            <div class="h-64 md:h-80"><canvas id="surfChart" aria-label="Surf quality chart" role="img"></canvas></div>
+        </div>
+        {% endif %}
+        </div>
     </div>
+
+    <script>
+      // Data wiring from backend
+      const labels = {{ chart_labels | tojson | safe }};
+      const scores = {{ chart_values | tojson | safe }};
+      const waveFt = {{ wave_ft | tojson | safe }};
+      const periodS = {{ period_s | tojson | safe }};
+      const windMph = {{ wind_mph | tojson | safe }};
+      const windDir = {{ wind_dir | tojson | safe }};
+      const skill = {{ (skill or 'Beginner') | tojson | safe }};
+
+      if (Array.isArray(labels) && labels.length > 0) {
+        const ctx = document.getElementById('surfChart').getContext('2d');
+
+        // Choose skill-aware background bands for Poor/Fair/Good
+        let bandCuts;
+        switch ((skill || 'Beginner')) {
+          case 'Advanced':
+            bandCuts = { red: 50, amber: 75 }; // 0-50 red, 50-75 amber, 75-100 green
+            break;
+          case 'Intermediate':
+            bandCuts = { red: 45, amber: 68 };
+            break;
+          case 'Beginner':
+          default:
+            bandCuts = { red: 40, amber: 60 };
+        }
+        const zones = [
+          {from: 0, to: bandCuts.red, color: 'rgba(239,68,68,0.10)'},     // red-500 tint
+          {from: bandCuts.red, to: bandCuts.amber, color: 'rgba(245,158,11,0.10)'},   // amber-500 tint
+          {from: bandCuts.amber, to: 100, color: 'rgba(16,185,129,0.10)'},  // emerald-500 tint
+        ];
+
+        // Background color bands plugin for zones
+        const bandsPlugin = {
+          id: 'bandsPlugin',
+          beforeDraw(chart, args, opts) {
+            const {ctx, chartArea, scales} = chart;
+            if (!chartArea) return;
+            const y = scales.y;
+            ctx.save();
+            zones.forEach(z => {
+              const yTop = y.getPixelForValue(z.to);
+              const yBottom = y.getPixelForValue(z.from);
+              ctx.fillStyle = z.color;
+              ctx.fillRect(chartArea.left, yTop, chartArea.right - chartArea.left, yBottom - yTop);
+            });
+            ctx.restore();
+          }
+        };
+
+        const isMulti = scores.length > 1;
+        const data = {
+          labels,
+          datasets: [{
+            label: 'Surf Quality',
+            data: scores,
+            fill: isMulti,
+            borderColor: 'rgb(59,130,246)', // blue-500
+            backgroundColor: 'rgba(59,130,246,0.2)',
+            tension: 0.3,
+            pointRadius: 3,
+            borderWidth: 2,
+          }]
+        };
+
+        const config = {
+          type: isMulti ? 'line' : 'bar',
+          data,
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              y: {
+                min: 0,
+                max: 100,
+                ticks: { stepSize: 10 }
+              }
+            },
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                callbacks: {
+                  label: function(ctx) {
+                    const idx = ctx.dataIndex;
+                    const lines = [];
+                    const q = ctx.parsed.y;
+                    lines.push(`Quality: ${q}/100 🌊`);
+                    if (Array.isArray(waveFt) && waveFt.length > 0) {
+                      const w = waveFt[Math.min(idx, waveFt.length - 1)];
+                      lines.push(`Wave: ${w} ft 🌊`);
+                    }
+                    if (Array.isArray(periodS) && periodS.length > 0) {
+                      const p = periodS[Math.min(idx, periodS.length - 1)];
+                      lines.push(`Period: ${p} s ⏱️`);
+                    }
+                    if (Array.isArray(windMph) && windMph.length > 0) {
+                      const s = windMph[Math.min(idx, windMph.length - 1)];
+                      const d = Array.isArray(windDir) && windDir.length > 0 ? windDir[Math.min(idx, windDir.length - 1)] : '';
+                      lines.push(`Wind: ${s} mph 💨 • ${d}° 🧭`);
+                    }
+                    return lines;
+                  }
+                }
+              }
+            }
+          },
+          plugins: [bandsPlugin]
+        };
+
+        new Chart(ctx, config);
+      }
+    </script>
 </body>
 </html>
