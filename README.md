@@ -41,6 +41,22 @@ Usage
    - Headline, detail, hazards, board suggestion, and best session window.
    - A chart with score and tooltip metrics (wave ft, period s, wind mph/dir).
 
+For Surfers: How To Use It
+- Pick your spot and day: Choose one of the listed breaks and a date. Set your skill to get fairer scoring for your level.
+- Read the score: 0–100 with Poor/Fair/Good color bands tuned per skill. Higher usually means more fun for that skill.
+- Check the badges:
+  - Live vs CSV: “Live” means real‑time data; “CSV” is sample data only.
+  - Confidence: High/Medium/Low based on data quality; treat “Low” as rough guidance.
+  - Board & Session: Quick suggestion for board type and best time window (often dawn if windy/onshore).
+- Skim the headline and details: Size phrase (e.g., knee‑to‑waist), wind (off/side/onshore with speed), and a tide note when relevant.
+- Watch hazards: Rip risk in onshore/windy conditions, powerful surf warnings for head‑high+ days, and tide‑related caveats.
+- Use the chart tooltips: Hover points to see size/period/wind for each day or the snapshot.
+- Plan by skill:
+  - Beginner: 40–60 with knee‑to‑waist, lighter winds, mid‑period is ideal. Foamie/longboard.
+  - Intermediate: 50–75 with waist‑to‑chest, manageable winds, mid+ period. Fish/shorter boards.
+  - Advanced: 70+ with head‑high/longer period and offshore or light side. Shortboard.
+- If it’s marginal: Try protected corners, smaller tide windows, or dawn patrol to beat wind.
+
 Supported Demo Locations
 - Malibu
 - Huntington Beach
