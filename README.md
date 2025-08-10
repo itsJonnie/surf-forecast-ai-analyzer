@@ -1,4 +1,13 @@
 ---
+title: Surf Forecast AI Analyzer
+emoji: "🏄‍♂️"
+colorFrom: yellow
+colorTo: blue
+sdk: docker
+pinned: false
+short_description: AI-powered surf forecast dashboard built with FastAPI
+---
+
 Surf Forecast AI Analyzer
 =========================
 

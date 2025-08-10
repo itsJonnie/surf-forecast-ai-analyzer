@@ -1,19 +1,16 @@
 FROM python:3.11-slim
 
-# Set working directory
 WORKDIR /app
 
-# Copy the zipped project into the container
-COPY surf_forecast_ai.zip .
+# Install Python dependencies first (better layer caching)
+COPY requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Install unzip to extract the archive
-RUN apt-get update && apt-get install -y unzip \
-    && unzip surf_forecast_ai.zip \
-    && mv surf_forecast_ai/* . \
-    && rm -rf surf_forecast_ai surf_forecast_ai.zip \
-    && pip install --no-cache-dir -r requirements.txt
+# Copy the application source
+COPY . .
 
-# Expose port and run the FastAPI application
+# Hugging Face Spaces will set $PORT; default to 7860 locally
 ENV PORT=7860
 
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "7860"]
+# Use shell form so $PORT is expanded at runtime
+CMD ["sh","-c","uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-7860}"]
